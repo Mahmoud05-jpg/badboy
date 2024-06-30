@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الحقيقة أم التحدي</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        .wheel-container {
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .wheel {
+            width: 200px;
+            height: 200px;
+            border: 10px solid #fff;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .segment {
+            width: 50%;
+            height: 50%;
+            background: #ff6f61;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform-origin: 0 100%;
+        }
+
+        .segment:nth-child(odd) {
+            background: #ffc107;
+            transform: rotate(90deg);
+        }
+
+        .segment:nth-child(even) {
+            background: #8bc34a;
+            transform: rotate(0deg);
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0); }
+            100% { transform: rotate(1080deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mahmoud Matrawy</h1>
+        <div class="input-section">
+            <label for="name">ادخل اسمك:</label>
+            <input type="text" id="name">
+            <button onclick="startGame()">جرب حظك</button>
+        </div>
+        <div class="wheel-container" id="wheel-container">
+            <div class="wheel" id="wheel">
+                <div class="segment">حقيقة</div>
+                <div class="segment">تحدي</div>
+                <div class="segment">حقيقة</div>
+                <div class="segment">تحدي</div>
+            </div>
+        </div>
+        <div id="result" class="result"></div>
+    </div>
+    <script>
+        const questions = [
+            "ما هو أكثر شيء يحرجك يا {name}؟",
+            "ما هو أغرب حلم رأيته في حياتك يا {name}؟",
+            "هل سبق لك أن كذبت كذبة كبيرة يا {name}؟",
+            "ما هو أغرب شيء أكلته على الإطلاق يا {name}؟"
+        ];
+
+        const dares = [
+            "يا {name}، ارسم شارباً على وجهك باستخدام قلم حبر.",
+            "يا {name}، قم بتقليد شخص مشهور لمدة دقيقة.",
+            "يا {name}، قف على رجل واحدة وغني أغنيتك المفضلة.",
+            "يا {name}، ارقص رقصة مجنونة لمدة 30 ثانية."
+        ];
+
+        const punishments = [
+            "{name}، اشرب كأس ماء بارد بسرعة.",
+            "{name}، قف على قدم واحدة لمدة دقيقة.",
+            "{name}، قل نكتة سيئة بصوت عالٍ.",
+            "{name}، امشِ في أرجاء الغرفة كالدجاجة لمدة دقيقة."
+        ];
+
+        function startGame() {
+            const name = document.getElementById("name").value;
+            if (!name) {
+                alert("يرجى إدخال اسمك.");
+                return;
+            }
+
+            const wheel = document.getElementById("wheel");
+            wheel.style.animation = "spin 4s ease-out forwards";
+
+            setTimeout(() => {
+                const result = Math.random() < 0.5 ? "حقيقة" : "تحدي";
+                document.getElementById("result").innerText = result;
+
+                if (result === "حقيقة") {
+                    const question = questions[Math.floor(Math.random() * questions.length)].replace("{name}", name);
+                    const punishment = punishments[Math.floor(Math.random() * punishments.length)].replace("{name}", name);
+                    document.getElementById("result").innerHTML = `
+                        <p>${question}</p>
+                        <button onclick="showPunishment('${punishment}')">لم أستطع الإجابة</button>
+                    `;
+                } else {
+                    const dare = dares[Math.floor(Math.random() * dares.length)].replace("{name}", name);
+                    const punishment = punishments[Math.floor(Math.random() * punishments.length)].replace("{name}", name);
+                    document.getElementById("result").innerHTML = `
+                        <p>${dare}</p>
+                        <button onclick="showPunishment('${punishment}')">لم أستطع التنفيذ</button>
+                    `;
+                }
+            }, 4000);
+        }
+
+        function showPunishment(punishment) {
+            document.getElementById("result").innerText = `عقاب: ${punishment}`;
+        }
+    </script>
+</body>
+</html>
